@@ -7,3 +7,26 @@
 Welcome to your new app.
 
 <Component1></Component1>
+
+<hr />
+
+<div class="my-component" @ref="div">
+    This component is defined in the <strong>RazorClassLibrary1</strong> library.
+    <div>div: [@bounds.Width, @bounds.Height]</div>
+
+    <button @onclick=GetBounds>Get Bounds</button>
+</div>
+
+
+@code {
+    [Inject] private IJSRuntime js { get; set; } = default!;
+
+    private ElementReference div;
+    private Bounds2 bounds = new();
+
+    protected async Task GetBounds()
+    {
+        var interop = new ExampleJsInterop(js);
+        bounds = await js.InvokeAsync<Bounds2>("getBoundingClientRect", div);
+    }
+}
